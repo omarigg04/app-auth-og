@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/user_list_screen.dart';
+import 'screens/auth_wrapper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter CRUD',
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-      home: const UserListScreen(),
+      home: const AuthWrapper(),
       debugShowCheckedModeBanner: false,
     );
   }

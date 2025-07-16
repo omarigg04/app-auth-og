@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/user.dart';
+import 'auth_service.dart';
 
 class UserService {
   // final String baseUrl = 'http://192.168.1.117:3000'; // Para emulador Android
-final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
+  final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
 
   //para usar en mi deploy de backend en render:
   //final String baseUrl = 'https://nestjs-crud-7t8x.onrender.com'; // Cambia por tu URL real
 
+  final AuthService _authService = AuthService();
 
   // Si usas celular físico, cambia a: 'http://192.168.X.X:3000'
 
@@ -17,7 +19,11 @@ final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
   // Utiliza Future<List<User>> para manejar la carga asíncrona
   Future<List<User>> fetchUsers() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/usuarios/all'));
+      final headers = await _authService.getAuthHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/usuarios/all'),
+        headers: headers,
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -33,9 +39,10 @@ final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
   // Método para crear un nuevo usuario
   // Recibe el nombre, edad y usuario del nuevo usuario
   Future<User> createUser(User user) async {
+    final headers = await _authService.getAuthHeaders();
     final response = await http.post(
       Uri.parse('$baseUrl/usuarios'), // Cambia por tu URL real
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: json.encode(user.toJson()),
     );
 
@@ -50,7 +57,11 @@ final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
   // Recibe el ID del usuario a eliminar
   Future<void> deleteUser(int id) async {
     try {
-      final response = await http.delete(Uri.parse('$baseUrl/usuarios/$id'));
+      final headers = await _authService.getAuthHeaders();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/usuarios/$id'),
+        headers: headers,
+      );
 
       if (response.statusCode != 200) {
         throw Exception('Error al eliminar usuario: ${response.statusCode}');
@@ -65,9 +76,10 @@ final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
   // Asegúrate de que el ID del usuario esté incluido en el objeto User
   Future<void> updateUser(User user) async {
     try {
+      final headers = await _authService.getAuthHeaders();
       final response = await http.put(
         Uri.parse('$baseUrl/usuarios/${user.id}'),
-        headers: {'Content-Type': 'application/json'},
+        headers: headers,
         body: jsonEncode(user.toJson()),
       );
 

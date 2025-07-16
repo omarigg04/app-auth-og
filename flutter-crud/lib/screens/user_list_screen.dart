@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../services/user_service.dart';
+import '../services/auth_service.dart';
 import 'create_user.dart'; // Importar la nueva pantalla
 import 'edit_user.dart';
+import 'login_screen.dart';
 
 class UserListScreen extends StatefulWidget {
   const UserListScreen({super.key});
@@ -14,6 +16,7 @@ class UserListScreen extends StatefulWidget {
 class _UserListScreenState extends State<UserListScreen> {
   late Future<List<User>> futureUsers;
   final UserService userService = UserService();
+  final AuthService authService = AuthService();
 
   @override
   void initState() {
@@ -49,6 +52,34 @@ class _UserListScreenState extends State<UserListScreen> {
     }
   }
 
+  Future<void> _logout() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cerrar Sesión'),
+        content: const Text('¿Estás seguro de que quieres cerrar sesión?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Cerrar Sesión'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await authService.logout();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +87,13 @@ class _UserListScreenState extends State<UserListScreen> {
         title: const Text('Usuarios'),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _logout,
+            tooltip: 'Cerrar sesión',
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {

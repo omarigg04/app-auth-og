@@ -1,4 +1,4 @@
-import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -17,5 +17,10 @@ export class AuthController {
   async login(@Body(ValidationPipe) loginDto: LoginDto) {
     console.log('POST /auth/login recibido:', loginDto.email);
     return this.authService.login(loginDto);
+  }
+
+  @Get('test')
+  async test() {
+    return { message: 'Auth module working!', timestamp: new Date() };
   }
 }
