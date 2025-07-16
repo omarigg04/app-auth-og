@@ -4,7 +4,9 @@ import '../models/expense.dart';
 import 'auth_service.dart';
 
 class ExpenseService {
-  final String baseUrl = 'http://192.168.1.117:3000/expenses';
+  // final String baseUrl = 'http://192.168.1.117:3000/expenses';
+    final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
+
   final AuthService _authService = AuthService();
 
   // Crear nuevo gasto

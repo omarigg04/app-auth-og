@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  // final String baseUrl = 'http://localhost:3000'; // Cambia por tu URL del backend
-  final String baseUrl = 'http://192.168.1.117:3000'; // Para emulador Android
+  final String baseUrl = 'http://localhost:3000'; // Cambia por tu URL del backend
+  // final String baseUrl = 'http://192.168.1.117:3000'; // Para emulador Android
 
   // Claves para SharedPreferences
   static const String _tokenKey = 'jwt_token';
