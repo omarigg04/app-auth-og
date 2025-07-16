@@ -13,7 +13,7 @@ import { ExpenseModule } from './expense/expense.module';
     ConfigModule.forRoot({ 
       isGlobal: true,
       // Solo carga archivos .env en desarrollo o si no está en Vercel
-      envFilePath: process.env.NODE_ENV !== 'production' ? '.env.localwsl' : undefined, // ✅
+      envFilePath: process.env.NODE_ENV !== 'production' ? '.env.local' : undefined, // ✅
       // Las variables de process.env tendrán prioridad sobre las de los archivos
       ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
