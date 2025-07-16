@@ -33,18 +33,23 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
+      print('🔍 LOGIN SCREEN - Iniciando login...');
       final result = await _authService.login(
         _emailController.text.trim(),
         _passwordController.text,
       );
 
-      if (result['success']) {
+      print('🔍 LOGIN SCREEN - Resultado del login: $result');
+
+      if (result['success'] == true) {
+        print('✅ LOGIN SCREEN - Login exitoso, navegando...');
         // Login exitoso, navegar a la lista de usuarios
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const UserListScreen()),
         );
       } else {
+        print('❌ LOGIN SCREEN - Login fallido: ${result['message']}');
         // Mostrar error
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -54,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } catch (e) {
+      print('💥 LOGIN SCREEN ERROR: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),

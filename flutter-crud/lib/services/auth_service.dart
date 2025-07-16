@@ -37,6 +37,9 @@ class AuthService {
   // Login de usuario
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
+      print('🔍 FLUTTER LOGIN - Enviando request a: $baseUrl/auth/login');
+      print('🔍 FLUTTER LOGIN - Email: $email');
+      
       final response = await http.post(
         Uri.parse('$baseUrl/auth/login'),
         headers: {'Content-Type': 'application/json'},
@@ -46,15 +49,25 @@ class AuthService {
         }),
       );
 
+      print('🔍 FLUTTER LOGIN - Status Code: ${response.statusCode}');
+      print('🔍 FLUTTER LOGIN - Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        print('✅ FLUTTER LOGIN - Data parsed correctamente');
+        print('🔍 FLUTTER LOGIN - Access Token: ${data['access_token']?.substring(0, 20)}...');
+        
         await _saveAuthData(data['access_token'], data['user']);
+        print('✅ FLUTTER LOGIN - Datos guardados en SharedPreferences');
+        
         return {'success': true, 'data': data};
       } else {
+        print('❌ FLUTTER LOGIN - Error status code: ${response.statusCode}');
         final error = jsonDecode(response.body);
         return {'success': false, 'message': error['message'] ?? 'Credenciales inválidas'};
       }
     } catch (e) {
+      print('💥 FLUTTER LOGIN ERROR: $e');
       return {'success': false, 'message': 'Error de conexión: $e'};
     }
   }
