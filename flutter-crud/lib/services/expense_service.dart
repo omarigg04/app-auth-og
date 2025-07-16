@@ -34,11 +34,16 @@ class ExpenseService {
   Future<Map<String, dynamic>> getMyExpenses() async {
     try {
       final headers = await _authService.getAuthHeaders();
+      print('🔍 EXPENSE SERVICE - Headers: $headers');
+      print('🔍 EXPENSE SERVICE - URL: $baseUrl/my-expenses');
       
       final response = await http.get(
         Uri.parse('$baseUrl/my-expenses'),
         headers: headers,
       );
+      
+      print('🔍 EXPENSE SERVICE - Status: ${response.statusCode}');
+      print('🔍 EXPENSE SERVICE - Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
