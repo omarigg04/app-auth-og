@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
-import 'user_list_screen.dart';
+import 'expense_list_screen.dart';
 
 class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
@@ -48,6 +48,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
     // Si está autenticado, mostrar la app principal
     // Si no está autenticado, mostrar pantalla de login
-    return _isAuthenticated ? const UserListScreen() : const LoginScreen();
+    return _isAuthenticated ? ExpenseListScreen() : const LoginScreen();
   }
 }
