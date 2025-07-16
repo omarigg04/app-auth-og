@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import 'user_list_screen.dart';
+import 'dashboard_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -43,10 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (result['success'] == true) {
         print('✅ LOGIN SCREEN - Login exitoso, navegando...');
-        // Login exitoso, navegar a la lista de usuarios
+        // Login exitoso, navegar al dashboard
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const UserListScreen()),
+          MaterialPageRoute(builder: (context) => DashboardScreen()),
         );
       } else {
         print('❌ LOGIN SCREEN - Login fallido: ${result['message']}');
