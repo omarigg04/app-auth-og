@@ -15,7 +15,7 @@ export class ExpenseService {
         return this.expenseModel.create({
             ...createExpenseDto,
             user_id: userId,
-        });
+        } as any);
     }
 
     async findAll(): Promise<Expense[]> {
@@ -31,7 +31,7 @@ export class ExpenseService {
         });
     }
 
-    async findOne(id: number): Promise<Expense> {
+    async findOne(id: number): Promise<Expense | null> {
         return this.expenseModel.findByPk(id, {
             include: ['user'],
         });
