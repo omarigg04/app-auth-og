@@ -8,14 +8,14 @@ export class AuthUser extends Model<AuthUser> {
     declare id: number;
 
     @Column({ type: DataType.STRING, unique: true, allowNull: false })
-    email: string;
+    declare email: string;
 
     @Column({ type: DataType.STRING, allowNull: false })
-    password: string;
+    declare password: string;
 
     @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
-    created_at: Date;
+    declare created_at: Date;
 
     @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
-    updated_at: Date;
+    declare updated_at: Date;
 }

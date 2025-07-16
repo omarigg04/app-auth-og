@@ -64,6 +64,8 @@ export class AuthService {
 
       // Verificar contraseña
       console.log('🔍 LOGIN - Verificando contraseña...');
+      console.log('🔍 LOGIN - Password del usuario desde BD:', user.password ? 'EXISTE' : 'NULL/UNDEFINED');
+      console.log('🔍 LOGIN - Password length desde BD:', user.password?.length || 'N/A');
       const isPasswordValid = await bcrypt.compare(password, user.password);
       console.log('🔍 LOGIN - Password válido:', isPasswordValid ? 'SÍ' : 'NO');
       if (!isPasswordValid) {
