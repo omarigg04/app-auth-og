@@ -52,7 +52,7 @@ class AuthService {
       print('🔍 FLUTTER LOGIN - Status Code: ${response.statusCode}');
       print('🔍 FLUTTER LOGIN - Response Body: ${response.body}');
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
         print('✅ FLUTTER LOGIN - Data parsed correctamente');
         print('🔍 FLUTTER LOGIN - Access Token: ${data['access_token']?.substring(0, 20)}...');
