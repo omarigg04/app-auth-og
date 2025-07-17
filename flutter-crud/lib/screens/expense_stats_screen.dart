@@ -80,14 +80,16 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
   }
 
   Future<void> _selectDateRange() async {
-    final DateTimeRange? picked = await showDateRangePicker(
+    final DateTimeRange? picked = await showDialog<DateTimeRange>(
       context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-      initialDateRange: DateTimeRange(start: _startDate, end: _endDate),
-      helpText: 'Seleccionar rango de fechas',
-      cancelText: 'Cancelar',
-      confirmText: 'Confirmar',
+      builder: (BuildContext context) {
+        return _DateRangePickerDialog(
+          initialStartDate: _startDate,
+          initialEndDate: _endDate,
+          firstDate: DateTime(2020),
+          lastDate: DateTime.now(),
+        );
+      },
     );
     
     if (picked != null) {
@@ -96,6 +98,7 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
         _endDate = picked.end;
         _selectedPeriod = 'Personalizado';
       });
+      _loadData(); // Recargar datos con el nuevo rango
     }
   }
 
@@ -186,22 +189,79 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: Text(
-                                        'Desde: ${_startDate.day}/${_startDate.month}/${_startDate.year}',
-                                        style: TextStyle(fontSize: 14),
+                                      child: Container(
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[50],
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(color: Colors.grey[300]!),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Desde',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey[600],
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              '${_startDate.day}/${_startDate.month}/${_startDate.year}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     SizedBox(width: 8),
                                     Expanded(
-                                      child: Text(
-                                        'Hasta: ${_endDate.day}/${_endDate.month}/${_endDate.year}',
-                                        style: TextStyle(fontSize: 14),
+                                      child: Container(
+                                        padding: EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[50],
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(color: Colors.grey[300]!),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Hasta',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey[600],
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              '${_endDate.day}/${_endDate.month}/${_endDate.year}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.calendar_today),
-                                      onPressed: _selectDateRange,
-                                      tooltip: 'Seleccionar fechas',
+                                    SizedBox(width: 8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.orange,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(Icons.calendar_today, color: Colors.white),
+                                        onPressed: _selectDateRange,
+                                        tooltip: 'Seleccionar fechas personalizadas',
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -579,5 +639,339 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
         ],
       ),
     );
+  }
+}
+
+class _DateRangePickerDialog extends StatefulWidget {
+  final DateTime initialStartDate;
+  final DateTime initialEndDate;
+  final DateTime firstDate;
+  final DateTime lastDate;
+
+  const _DateRangePickerDialog({
+    required this.initialStartDate,
+    required this.initialEndDate,
+    required this.firstDate,
+    required this.lastDate,
+  });
+
+  @override
+  _DateRangePickerDialogState createState() => _DateRangePickerDialogState();
+}
+
+class _DateRangePickerDialogState extends State<_DateRangePickerDialog> {
+  late DateTime _startDate;
+  late DateTime _endDate;
+  late DateTime _displayedMonth;
+  bool _isSelectingStart = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _startDate = widget.initialStartDate;
+    _endDate = widget.initialEndDate;
+    _displayedMonth = DateTime(_startDate.year, _startDate.month);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        width: 400,
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Seleccionar rango de fechas',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            
+            // Date selection buttons
+            Row(
+              children: [
+                Expanded(
+                  child: _buildDateButton(
+                    'Fecha inicio',
+                    _startDate,
+                    _isSelectingStart,
+                    () => setState(() => _isSelectingStart = true),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: _buildDateButton(
+                    'Fecha fin',
+                    _endDate,
+                    !_isSelectingStart,
+                    () => setState(() => _isSelectingStart = false),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            
+            // Quick selection buttons
+            Wrap(
+              spacing: 8,
+              children: [
+                _buildQuickButton('Últimos 7 días', 7),
+                _buildQuickButton('Últimos 30 días', 30),
+                _buildQuickButton('Últimos 90 días', 90),
+                _buildQuickButton('Este mes', 0),
+              ],
+            ),
+            SizedBox(height: 16),
+            
+            // Calendar header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.chevron_left),
+                  onPressed: () {
+                    setState(() {
+                      _displayedMonth = DateTime(_displayedMonth.year, _displayedMonth.month - 1);
+                    });
+                  },
+                ),
+                Text(
+                  _getMonthYearString(_displayedMonth),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                IconButton(
+                  icon: Icon(Icons.chevron_right),
+                  onPressed: () {
+                    setState(() {
+                      _displayedMonth = DateTime(_displayedMonth.year, _displayedMonth.month + 1);
+                    });
+                  },
+                ),
+              ],
+            ),
+            
+            // Calendar grid
+            _buildCalendarGrid(),
+            
+            SizedBox(height: 16),
+            
+            // Action buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancelar'),
+                ),
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: _startDate.isBefore(_endDate) || _startDate.isAtSameMomentAs(_endDate)
+                      ? () => Navigator.of(context).pop(DateTimeRange(start: _startDate, end: _endDate))
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: Text('Aplicar'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateButton(String label, DateTime date, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.orange.withOpacity(0.1) : Colors.grey[100],
+          border: Border.all(
+            color: isSelected ? Colors.orange : Colors.grey[300]!,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: isSelected ? Colors.orange : Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 4),
+            Text(
+              '${date.day}/${date.month}/${date.year}',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: isSelected ? Colors.orange : Colors.black87,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickButton(String label, int days) {
+    return ElevatedButton(
+      onPressed: () {
+        final now = DateTime.now();
+        setState(() {
+          if (days == 0) {
+            // Este mes
+            _startDate = DateTime(now.year, now.month, 1);
+            _endDate = DateTime(now.year, now.month + 1, 0);
+          } else {
+            _startDate = now.subtract(Duration(days: days));
+            _endDate = now;
+          }
+          _displayedMonth = DateTime(_startDate.year, _startDate.month);
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey[200],
+        foregroundColor: Colors.black87,
+        elevation: 0,
+      ),
+      child: Text(label, style: TextStyle(fontSize: 12)),
+    );
+  }
+
+  Widget _buildCalendarGrid() {
+    return Container(
+      height: 300,
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          childAspectRatio: 1,
+        ),
+        itemCount: 42, // 6 semanas * 7 días
+        itemBuilder: (context, index) {
+          final firstDayOfMonth = DateTime(_displayedMonth.year, _displayedMonth.month, 1);
+          final firstDayWeekday = firstDayOfMonth.weekday % 7;
+          
+          if (index < 7) {
+            // Header con días de la semana
+            final weekdays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            return Container(
+              alignment: Alignment.center,
+              child: Text(
+                weekdays[index],
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[600],
+                ),
+              ),
+            );
+          }
+          
+          final dayIndex = index - 7;
+          final day = dayIndex - firstDayWeekday + 1;
+          
+          if (day <= 0 || day > _daysInMonth(_displayedMonth)) {
+            return Container();
+          }
+          
+          final currentDate = DateTime(_displayedMonth.year, _displayedMonth.month, day);
+          final isInRange = _isDateInRange(currentDate);
+          final isStartDate = _isSameDay(currentDate, _startDate);
+          final isEndDate = _isSameDay(currentDate, _endDate);
+          final isToday = _isSameDay(currentDate, DateTime.now());
+          
+          return GestureDetector(
+            onTap: () {
+              if (currentDate.isBefore(widget.firstDate) || currentDate.isAfter(widget.lastDate)) {
+                return;
+              }
+              
+              setState(() {
+                if (_isSelectingStart) {
+                  _startDate = currentDate;
+                  if (_startDate.isAfter(_endDate)) {
+                    _endDate = _startDate;
+                  }
+                  _isSelectingStart = false;
+                } else {
+                  _endDate = currentDate;
+                  if (_endDate.isBefore(_startDate)) {
+                    _startDate = _endDate;
+                  }
+                }
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: isStartDate || isEndDate
+                    ? Colors.orange
+                    : isInRange
+                        ? Colors.orange.withOpacity(0.3)
+                        : isToday
+                            ? Colors.orange.withOpacity(0.1)
+                            : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+                border: isToday ? Border.all(color: Colors.orange, width: 1) : null,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                day.toString(),
+                style: TextStyle(
+                  color: isStartDate || isEndDate
+                      ? Colors.white
+                      : currentDate.isBefore(widget.firstDate) || currentDate.isAfter(widget.lastDate)
+                          ? Colors.grey[400]
+                          : Colors.black87,
+                  fontWeight: isStartDate || isEndDate || isToday
+                      ? FontWeight.bold
+                      : FontWeight.normal,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  bool _isDateInRange(DateTime date) {
+    return (date.isAfter(_startDate) || _isSameDay(date, _startDate)) &&
+           (date.isBefore(_endDate) || _isSameDay(date, _endDate));
+  }
+
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+  }
+
+  int _daysInMonth(DateTime date) {
+    return DateTime(date.year, date.month + 1, 0).day;
+  }
+
+  String _getMonthYearString(DateTime date) {
+    final months = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    return '${months[date.month - 1]} ${date.year}';
   }
 }
