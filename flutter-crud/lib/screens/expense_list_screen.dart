@@ -184,52 +184,52 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
     );
   }
 
-  Widget _buildDrawer() {
-    return Drawer(
-      child: Column(
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF2C3E50)),
-            child: Row(
-              children: [
-                Icon(Icons.shopping_cart, color: Colors.white, size: 32),
-                SizedBox(width: 12),
-                Text(
-                  'Gastos',
-                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.dashboard),
-            title: Text('Dashboard'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: Icon(Icons.attach_money),
-            title: Text('Ingresos'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: Icon(Icons.shopping_cart, color: Color(0xFFF4B183)),
-            title: Text('Gastos', style: TextStyle(color: Color(0xFFF4B183))),
-          ),
-          ListTile(
-            leading: Icon(Icons.bar_chart),
-            title: Text('Estadísticas'),
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseStatsScreen())),
-          ),
-          Spacer(),
-          ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Cerrar Sesión'),
-            onTap: _logout,
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildDrawer() {
+  //   return Drawer(
+  //     child: Column(
+  //       children: [
+  //         DrawerHeader(
+  //           decoration: BoxDecoration(color: Color(0xFF2C3E50)),
+  //           child: Row(
+  //             children: [
+  //               Icon(Icons.shopping_cart, color: Colors.white, size: 32),
+  //               SizedBox(width: 12),
+  //               Text(
+  //                 'Gastos',
+  //                 style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         ListTile(
+  //           leading: Icon(Icons.dashboard),
+  //           title: Text('Dashboard'),
+  //           onTap: () => Navigator.pop(context),
+  //         ),
+  //         ListTile(
+  //           leading: Icon(Icons.attach_money),
+  //           title: Text('Ingresos'),
+  //           onTap: () => Navigator.pop(context),
+  //         ),
+  //         ListTile(
+  //           leading: Icon(Icons.shopping_cart, color: Color(0xFFF4B183)),
+  //           title: Text('Gastos', style: TextStyle(color: Color(0xFFF4B183))),
+  //         ),
+  //         ListTile(
+  //           leading: Icon(Icons.bar_chart),
+  //           title: Text('Estadísticas'),
+  //           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseStatsScreen())),
+  //         ),
+  //         Spacer(),
+  //         ListTile(
+  //           leading: Icon(Icons.logout),
+  //           title: Text('Cerrar Sesión'),
+  //           onTap: _logout,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildHeader() {
     return Container(
