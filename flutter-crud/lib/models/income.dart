@@ -126,6 +126,7 @@ class IncomeSources {
   static const List<String> sources = [
     'Salario',
     'Freelance',
+    'Fintech',
     'Inversiones',
     'Negocio',
     'Bonificación',
@@ -138,6 +139,7 @@ class IncomeSources {
   static const Map<String, String> sourceIcons = {
     'Salario': '💼',
     'Freelance': '💻',
+    'Fintech': '🏦',
     'Inversiones': '📈',
     'Negocio': '🏢',
     'Bonificación': '🎁',

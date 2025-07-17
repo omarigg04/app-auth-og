@@ -29,7 +29,13 @@ class _EditIncomeScreenState extends State<EditIncomeScreen> {
     _nombreIngresoController = TextEditingController(text: widget.income.nombreIngreso);
     _montoController = TextEditingController(text: widget.income.monto.toString());
     _descripcionController = TextEditingController(text: widget.income.descripcion ?? '');
+    
+    // Validar que la fuente de ingreso esté en la lista de fuentes válidas
     _fuenteIngreso = widget.income.fuenteIngreso;
+    if (_fuenteIngreso != null && !IncomeSources.sources.contains(_fuenteIngreso)) {
+      _fuenteIngreso = null; // Si no está en la lista, usar null (Sin especificar)
+    }
+    
     _fechaIngreso = widget.income.fechaIngreso;
   }
 
