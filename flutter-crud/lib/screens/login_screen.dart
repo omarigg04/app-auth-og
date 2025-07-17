@@ -83,35 +83,106 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Iniciar Sesión'),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo o título
-              const Icon(
-                Icons.person_2,
-                size: 80,
-                color: Colors.blue,
-              ),
-              const SizedBox(height: 32),
-              
-              // Campo Email
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
+      backgroundColor: Color(0xFFFAFBFC),
+      body: Row(
+        children: [
+          if (MediaQuery.of(context).size.width > 800)
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFFB8E6B8), Color(0xFFA8D8A8)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.account_balance_wallet,
+                        size: 120,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 24),
+                      Text(
+                        'Gestiona tus finanzas',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'de manera inteligente',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          Expanded(
+            child: Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width > 800 ? 400 : double.infinity,
+                padding: EdgeInsets.all(32),
+                margin: EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Icon(
+                        Icons.person_2,
+                        size: 64,
+                        color: Color(0xFFB8E6B8),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'Iniciar Sesión',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2C3E50),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 32),
+              
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.email, color: Color(0xFFB8E6B8)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Color(0xFFE1E8ED)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Color(0xFFB8E6B8), width: 2),
+                          ),
+                          filled: true,
+                          fillColor: Color(0xFFF8F9FA),
+                        ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa tu email';
@@ -121,28 +192,37 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-              ),
-              const SizedBox(height: 16),
-              
-              // Campo Password
-              TextFormField(
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                decoration: InputDecoration(
-                  labelText: 'Contraseña',
-                  prefixIcon: const Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                  border: const OutlineInputBorder(),
-                ),
+                      ),
+                      SizedBox(height: 20),
+                      
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                          labelText: 'Contraseña',
+                          prefixIcon: Icon(Icons.lock, color: Color(0xFFB8E6B8)),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                              color: Color(0xFFB8E6B8),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Color(0xFFE1E8ED)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Color(0xFFB8E6B8), width: 2),
+                          ),
+                          filled: true,
+                          fillColor: Color(0xFFF8F9FA),
+                        ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa tu contraseña';
@@ -152,40 +232,52 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-              ),
-              const SizedBox(height: 24),
-              
-              // Botón Login
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          'Iniciar Sesión',
-                          style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(height: 32),
+                      
+                      Container(
+                        width: double.infinity,
+                        height: 54,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFFB8E6B8),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 2,
+                          ),
+                          child: _isLoading
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text(
+                                  'Iniciar Sesión',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
+                      ),
+                      SizedBox(height: 24),
+                      
+                      TextButton(
+                        onPressed: _navigateToRegister,
+                        child: Text(
+                          '¿No tienes cuenta? Regístrate aquí',
+                          style: TextStyle(
+                            color: Color(0xFFB8E6B8),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
-              
-              // Link para registro
-              TextButton(
-                onPressed: _navigateToRegister,
-                child: const Text(
-                  '¿No tienes cuenta? Regístrate aquí',
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

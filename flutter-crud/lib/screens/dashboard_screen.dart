@@ -125,7 +125,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       width: 250,
       decoration: BoxDecoration(
-        color: Color(0xFF2C3E50),
+        gradient: LinearGradient(
+          colors: [Color(0xFF6C7B7F), Color(0xFF2C3E50)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -182,11 +186,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: ListTile(
-        leading: Icon(icon, color: isActive ? Color(0xFF3498DB) : Colors.white70),
+        leading: Icon(icon, color: isActive ? Color(0xFFB8E6B8) : Colors.white70),
         title: Text(
           title,
           style: TextStyle(
-            color: isActive ? Color(0xFF3498DB) : Colors.white70,
+            color: isActive ? Color(0xFFB8E6B8) : Colors.white70,
             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -295,14 +299,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF3498DB), Color(0xFF2980B9)],
+          colors: [Color(0xFFB8E6B8), Color(0xFFA8D8A8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF3498DB).withOpacity(0.3),
+            color: Color(0xFFB8E6B8).withOpacity(0.3),
             blurRadius: 8,
             offset: Offset(0, 4),
           ),
@@ -359,22 +363,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           'Ingresos Totales',
           '+\$${_incomeStats?.total.toStringAsFixed(2) ?? '0.00'}',
           Icons.trending_up,
-          Color(0xFF27AE60),
-          Color(0xFF2ECC71),
+          Color(0xFFB8E6B8),
+          Color(0xFFA8D8A8),
         ),
         _buildModernStatsCard(
           'Gastos Totales',
           '-\$${_expenseStats?.total.toStringAsFixed(2) ?? '0.00'}',
           Icons.trending_down,
-          Color(0xFFE74C3C),
-          Color(0xFFC0392B),
+          Color(0xFFF4B183),
+          Color(0xFFE09C6B),
         ),
         _buildModernStatsCard(
           'Balance',
           '\$${((_incomeStats?.total ?? 0) - (_expenseStats?.total ?? 0)).toStringAsFixed(2)}',
           Icons.account_balance_wallet,
-          ((_incomeStats?.total ?? 0) - (_expenseStats?.total ?? 0)) >= 0 ? Color(0xFF27AE60) : Color(0xFFE74C3C),
-          ((_incomeStats?.total ?? 0) - (_expenseStats?.total ?? 0)) >= 0 ? Color(0xFF2ECC71) : Color(0xFFC0392B),
+          ((_incomeStats?.total ?? 0) - (_expenseStats?.total ?? 0)) >= 0 ? Color(0xFFB8E6B8) : Color(0xFFFFB3BA),
+          ((_incomeStats?.total ?? 0) - (_expenseStats?.total ?? 0)) >= 0 ? Color(0xFFA8D8A8) : Color(0xFFFF9BA3),
         ),
       ],
     );
@@ -467,19 +471,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
               _buildModernActionCard(
                 'Ingresos',
                 Icons.attach_money,
-                Color(0xFF27AE60),
+                Color(0xFFB8E6B8),
                 () => Navigator.push(context, MaterialPageRoute(builder: (context) => IncomeListScreen())),
               ),
               _buildModernActionCard(
                 'Gastos',
                 Icons.shopping_cart,
-                Color(0xFFE67E22),
+                Color(0xFFF4B183),
                 () => Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseListScreen())),
               ),
               _buildModernActionCard(
                 'Estadísticas',
                 Icons.bar_chart,
-                Color(0xFF3498DB),
+                Color(0xFFC8A8D8),
                 () => Navigator.push(context, MaterialPageRoute(builder: (context) => ExpenseStatsScreen())),
               ),
             ],
