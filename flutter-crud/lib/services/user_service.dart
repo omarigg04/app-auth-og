@@ -4,8 +4,9 @@ import '../models/user.dart';
 import 'auth_service.dart';
 
 class UserService {
-  // final String baseUrl = 'http://192.168.1.117:3000'; // Para emulador Android
-  final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
+  
+  final String baseUrl = 'http://192.168.1.117:3000'; // Para emulador Android
+  // final String baseUrl = 'http://localhost:3000'; // Para emulador iOS o navegador
 
   //para usar en mi deploy de backend en render:
   //final String baseUrl = 'https://nestjs-crud-7t8x.onrender.com'; // Cambia por tu URL real

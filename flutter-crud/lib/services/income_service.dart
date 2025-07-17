@@ -4,7 +4,8 @@ import '../models/income.dart';
 import 'auth_service.dart';
 
 class IncomeService {
-  final String baseUrl = 'http://localhost:3000/incomes';
+    final String baseUrl = 'http://192.168.1.117:3000/incomes'; // Para emulador Android
+  // final String baseUrl = 'http://localhost:3000/incomes';
   final AuthService _authService = AuthService();
 
   // Crear nuevo ingreso
