@@ -9,14 +9,14 @@ export class AuthController {
 
   @Post('register')
   async register(@Body(ValidationPipe) registerDto: RegisterDto) {
-    console.log('POST /auth/register recibido:', registerDto.email);
+    console.log('POST /auth/register recibido:', registerDto.user_name);
     return this.authService.register(registerDto);
   }
 
   @Post('login')
   @HttpCode(200)
   async login(@Body(ValidationPipe) loginDto: LoginDto) {
-    console.log('POST /auth/login recibido:', loginDto.email);
+    console.log('POST /auth/login recibido:', loginDto.user_name);
     return this.authService.login(loginDto);
   }
 

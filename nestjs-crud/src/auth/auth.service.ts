@@ -15,12 +15,18 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<{ access_token: string; user: any }> {
-    const { email, password } = registerDto;
+    const { email, user_name, password } = registerDto;
 
-    // Verificar si el usuario ya existe
-    const existingUser = await this.authUserModel.findOne({ where: { email } });
-    if (existingUser) {
+    // Verificar si el email ya existe
+    const existingUserByEmail = await this.authUserModel.findOne({ where: { email } });
+    if (existingUserByEmail) {
       throw new ConflictException('El email ya está registrado');
+    }
+
+    // Verificar si el username ya existe
+    const existingUserByUsername = await this.authUserModel.findOne({ where: { user_name } });
+    if (existingUserByUsername) {
+      throw new ConflictException('El nombre de usuario ya está registrado');
     }
 
     // Hash de la contraseña
@@ -30,11 +36,12 @@ export class AuthService {
     // Crear usuario
     const user = await this.authUserModel.create({
       email,
+      user_name,
       password: hashedPassword,
     } as any);
 
     // Generar JWT
-    const payload = { email: user.email, sub: user.id };
+    const payload = { user_name: user.user_name, sub: user.id };
     const access_token = this.jwtService.sign(payload);
 
     return {
@@ -42,6 +49,7 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
+        user_name: user.user_name,
         created_at: user.created_at,
       },
     };
@@ -49,16 +57,16 @@ export class AuthService {
 
   async login(loginDto: LoginDto): Promise<{ access_token: string; user: any }> {
     try {
-      const { email, password } = loginDto;
-      console.log('🔍 LOGIN - Email recibido:', email);
+      const { user_name, password } = loginDto;
+      console.log('🔍 LOGIN - Username recibido:', user_name);
       console.log('🔍 LOGIN - Password length:', password.length);
 
       // Buscar usuario
-      const user = await this.authUserModel.findOne({ where: { email } });
+      const user = await this.authUserModel.findOne({ where: { user_name } });
       console.log('🔍 LOGIN - Usuario encontrado:', user ? 'SÍ' : 'NO');
       
       if (!user) {
-        console.log('❌ LOGIN - Usuario no encontrado para email:', email);
+        console.log('❌ LOGIN - Usuario no encontrado para username:', user_name);
         throw new UnauthorizedException('Credenciales inválidas');
       }
 
@@ -75,7 +83,7 @@ export class AuthService {
 
       // Generar JWT
       console.log('🔍 LOGIN - Generando JWT...');
-      const payload = { email: user.email, sub: user.id };
+      const payload = { user_name: user.user_name, sub: user.id };
       const access_token = this.jwtService.sign(payload);
       console.log('✅ LOGIN - JWT generado exitosamente');
 
@@ -84,6 +92,7 @@ export class AuthService {
         user: {
           id: user.id,
           email: user.email,
+          user_name: user.user_name,
           created_at: user.created_at,
         },
       };
