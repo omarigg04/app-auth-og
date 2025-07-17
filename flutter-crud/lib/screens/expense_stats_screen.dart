@@ -21,6 +21,7 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
   DateTime _startDate = DateTime.now().subtract(Duration(days: 30));
   DateTime _endDate = DateTime.now();
   String _selectedPeriod = '30 días';
+  String _chartViewMode = 'auto'; // 'daily', 'weekly', 'auto'
 
   @override
   void initState() {
@@ -114,10 +115,23 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
     final filteredExpenses = _getFilteredExpenses();
     final filteredIncomes = _getFilteredIncomes();
     
+    // Determinar el modo de vista automáticamente
+    final daysDifference = _endDate.difference(_startDate).inDays;
+    final shouldUseWeekly = _chartViewMode == 'weekly' || 
+                           (_chartViewMode == 'auto' && daysDifference > 21);
+    
+    if (shouldUseWeekly) {
+      return _getWeeklyChartData(filteredExpenses, filteredIncomes);
+    } else {
+      return _getDailyChartData(filteredExpenses, filteredIncomes);
+    }
+  }
+  
+  Map<String, Map<String, double>> _getDailyChartData(List<Expense> expenses, List<Income> incomes) {
     Map<String, Map<String, double>> chartData = {};
     
     // Procesar gastos
-    for (var expense in filteredExpenses) {
+    for (var expense in expenses) {
       final dateKey = '${expense.fechaGasto.day}/${expense.fechaGasto.month}';
       if (!chartData.containsKey(dateKey)) {
         chartData[dateKey] = {'expenses': 0, 'incomes': 0};
@@ -126,7 +140,7 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
     }
     
     // Procesar ingresos
-    for (var income in filteredIncomes) {
+    for (var income in incomes) {
       final dateKey = '${income.fechaIngreso.day}/${income.fechaIngreso.month}';
       if (!chartData.containsKey(dateKey)) {
         chartData[dateKey] = {'expenses': 0, 'incomes': 0};
@@ -135,6 +149,42 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
     }
     
     return chartData;
+  }
+  
+  Map<String, Map<String, double>> _getWeeklyChartData(List<Expense> expenses, List<Income> incomes) {
+    Map<String, Map<String, double>> chartData = {};
+    
+    // Procesar gastos por semana
+    for (var expense in expenses) {
+      final weekKey = _getWeekKey(expense.fechaGasto);
+      if (!chartData.containsKey(weekKey)) {
+        chartData[weekKey] = {'expenses': 0, 'incomes': 0};
+      }
+      chartData[weekKey]!['expenses'] = (chartData[weekKey]!['expenses'] ?? 0) + expense.gasto;
+    }
+    
+    // Procesar ingresos por semana
+    for (var income in incomes) {
+      final weekKey = _getWeekKey(income.fechaIngreso);
+      if (!chartData.containsKey(weekKey)) {
+        chartData[weekKey] = {'expenses': 0, 'incomes': 0};
+      }
+      chartData[weekKey]!['incomes'] = (chartData[weekKey]!['incomes'] ?? 0) + income.monto;
+    }
+    
+    return chartData;
+  }
+  
+  String _getWeekKey(DateTime date) {
+    // Encontrar el lunes de la semana
+    final monday = date.subtract(Duration(days: date.weekday - 1));
+    final sunday = monday.add(Duration(days: 6));
+    
+    if (monday.month == sunday.month) {
+      return 'Sem ${monday.day}-${sunday.day}/${monday.month}';
+    } else {
+      return 'Sem ${monday.day}/${monday.month}-${sunday.day}/${sunday.month}';
+    }
   }
 
   @override
@@ -278,9 +328,15 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Gastos vs Ingresos por Día',
-                                  style: Theme.of(context).textTheme.headlineSmall,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      _getChartTitle(),
+                                      style: Theme.of(context).textTheme.headlineSmall,
+                                    ),
+                                    _buildViewModeToggle(),
+                                  ],
                                 ),
                                 SizedBox(height: 16),
                                 SizedBox(
@@ -457,11 +513,17 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
     }
     
     final sortedKeys = chartData.keys.toList()..sort((a, b) {
-      final aParts = a.split('/');
-      final bParts = b.split('/');
-      final aDate = DateTime(DateTime.now().year, int.parse(aParts[1]), int.parse(aParts[0]));
-      final bDate = DateTime(DateTime.now().year, int.parse(bParts[1]), int.parse(bParts[0]));
-      return aDate.compareTo(bDate);
+      if (a.startsWith('Sem') && b.startsWith('Sem')) {
+        // Ordenar por semanas
+        return a.compareTo(b);
+      } else {
+        // Ordenar por días
+        final aParts = a.split('/');
+        final bParts = b.split('/');
+        final aDate = DateTime(DateTime.now().year, int.parse(aParts[1]), int.parse(aParts[0]));
+        final bDate = DateTime(DateTime.now().year, int.parse(bParts[1]), int.parse(bParts[0]));
+        return aDate.compareTo(bDate);
+      }
     });
     
     List<BarChartGroupData> barGroups = [];
@@ -477,13 +539,13 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
             BarChartRodData(
               toY: data['expenses']!,
               color: Colors.red,
-              width: 12,
+              width: sortedKeys.length > 15 ? 8 : 12,
               borderRadius: BorderRadius.circular(4),
             ),
             BarChartRodData(
               toY: data['incomes']!,
               color: Colors.green,
-              width: 12,
+              width: sortedKeys.length > 15 ? 8 : 12,
               borderRadius: BorderRadius.circular(4),
             ),
           ],
@@ -539,11 +601,13 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
                     showTitles: true,
                     getTitlesWidget: (double value, TitleMeta meta) {
                       if (value.toInt() < sortedKeys.length) {
+                        final key = sortedKeys[value.toInt()];
                         return Padding(
                           padding: EdgeInsets.only(top: 8),
                           child: Text(
-                            sortedKeys[value.toInt()],
-                            style: TextStyle(fontSize: 10),
+                            key,
+                            style: TextStyle(fontSize: 9),
+                            textAlign: TextAlign.center,
                           ),
                         );
                       }
@@ -637,6 +701,68 @@ class _ExpenseStatsScreenState extends State<ExpenseStatsScreen> {
           Expanded(child: Text(title)),
           Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
         ],
+      ),
+    );
+  }
+  
+  String _getChartTitle() {
+    final daysDifference = _endDate.difference(_startDate).inDays;
+    final isWeekly = _chartViewMode == 'weekly' || 
+                    (_chartViewMode == 'auto' && daysDifference > 21);
+    
+    if (isWeekly) {
+      return 'Gastos vs Ingresos por Semana';
+    } else {
+      return 'Gastos vs Ingresos por Día';
+    }
+  }
+  
+  Widget _buildViewModeToggle() {
+    final daysDifference = _endDate.difference(_startDate).inDays;
+    
+    // Solo mostrar toggle si hay más de 21 días
+    if (daysDifference <= 21) {
+      return SizedBox.shrink();
+    }
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildToggleButton('Días', 'daily'),
+          _buildToggleButton('Semanas', 'weekly'),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildToggleButton(String label, String mode) {
+    final isSelected = _chartViewMode == mode;
+    
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _chartViewMode = mode;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.orange : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black87,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontSize: 12,
+          ),
+        ),
       ),
     );
   }
