@@ -629,7 +629,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
         title: Text('Mis Gastos'),
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
-        actions: [];
+        actions: [],
       ),
       body: Container(),
     );

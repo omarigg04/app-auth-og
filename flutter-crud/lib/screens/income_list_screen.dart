@@ -627,7 +627,7 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
         title: Text('Mis Ingresos'),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
-        actions: [];
+        actions: [],
       ),
       body: Container(),
     );
