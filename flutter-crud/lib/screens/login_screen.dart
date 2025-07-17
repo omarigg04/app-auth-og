@@ -12,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
   bool _isLoading = false;
@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _userNameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       print('🔍 LOGIN SCREEN - Iniciando login...');
       final result = await _authService.login(
-        _emailController.text.trim(),
+        _userNameController.text.trim(),
         _passwordController.text,
       );
 
@@ -167,11 +167,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 32),
               
                       TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
+                        controller: _userNameController,
                         decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email, color: Color(0xFFB8E6B8)),
+                          labelText: 'Nombre de Usuario',
+                          prefixIcon: Icon(Icons.person, color: Color(0xFFB8E6B8)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(color: Color(0xFFE1E8ED)),
@@ -185,10 +184,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa tu email';
+                    return 'Por favor ingresa tu nombre de usuario';
                   }
-                  if (!value.contains('@')) {
-                    return 'Por favor ingresa un email válido';
+                  if (value.length < 3) {
+                    return 'El nombre de usuario debe tener al menos 3 caracteres';
                   }
                   return null;
                 },

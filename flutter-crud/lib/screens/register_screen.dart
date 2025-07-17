@@ -11,6 +11,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -21,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    _userNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -37,6 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       final result = await _authService.register(
         _emailController.text.trim(),
+        _userNameController.text.trim(),
         _passwordController.text,
       );
 
@@ -98,6 +101,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 color: Colors.blue,
               ),
               const SizedBox(height: 32),
+              
+              // Campo Nombre de Usuario
+              TextFormField(
+                controller: _userNameController,
+                decoration: const InputDecoration(
+                  labelText: 'Nombre de Usuario',
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingresa tu nombre de usuario';
+                  }
+                  if (value.length < 3) {
+                    return 'El nombre de usuario debe tener al menos 3 caracteres';
+                  }
+                  if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+                    return 'Solo se permiten letras y números';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
               
               // Campo Email
               TextFormField(

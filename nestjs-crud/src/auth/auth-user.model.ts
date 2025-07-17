@@ -10,6 +10,9 @@ export class AuthUser extends Model<AuthUser> {
     @Column({ type: DataType.STRING, unique: true, allowNull: false })
     declare email: string;
 
+    @Column({ type: DataType.STRING, unique: true, allowNull: false })
+    declare user_name: string;
+
     @Column({ type: DataType.STRING, allowNull: false })
     declare password: string;
 

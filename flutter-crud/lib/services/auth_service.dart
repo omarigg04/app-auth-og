@@ -10,13 +10,14 @@ class AuthService {
   static const String _userKey = 'user_data';
 
   // Registrar nuevo usuario
-  Future<Map<String, dynamic>> register(String email, String password) async {
+  Future<Map<String, dynamic>> register(String email, String userName, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/auth/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email,
+          'user_name': userName,
           'password': password,
         }),
       );
@@ -35,16 +36,16 @@ class AuthService {
   }
 
   // Login de usuario
-  Future<Map<String, dynamic>> login(String email, String password) async {
+  Future<Map<String, dynamic>> login(String userName, String password) async {
     try {
       print('🔍 FLUTTER LOGIN - Enviando request a: $baseUrl/auth/login');
-      print('🔍 FLUTTER LOGIN - Email: $email');
+      print('🔍 FLUTTER LOGIN - Username: $userName');
       
       final response = await http.post(
         Uri.parse('$baseUrl/auth/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'email': email,
+          'user_name': userName,
           'password': password,
         }),
       );

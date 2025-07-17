@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/expense.dart';
 import '../models/income.dart';
+import '../models/auth_user.dart';
 import '../services/expense_service.dart';
 import '../services/income_service.dart';
 import '../services/auth_service.dart';
@@ -23,6 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   IncomeStats? _incomeStats;
   List<Expense> _recentExpenses = [];
   List<Income> _recentIncomes = [];
+  AuthUser? _currentUser;
   bool _isLoading = true;
 
   @override
@@ -35,6 +37,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() => _isLoading = true);
     
     try {
+      // Cargar usuario actual
+      final userData = await _authService.getUser();
+      if (userData != null) {
+        _currentUser = AuthUser.fromJson(userData);
+      }
+
       // Cargar estadísticas de gastos
       final expenseStatsResult = await _expenseService.getMyStats();
       if (expenseStatsResult['success']) {
@@ -319,7 +327,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '¡Bienvenido de vuelta!',
+                  _currentUser != null 
+                    ? '¡Bienvenido de vuelta, ${_currentUser!.userName}!'
+                    : '¡Bienvenido de vuelta!',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
