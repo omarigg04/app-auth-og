@@ -307,7 +307,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF529aff), Color(0xFF3b7cdb)],
+          colors: [Color.fromARGB(255, 163, 221, 255), Color.fromARGB(255, 173, 222, 255)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
