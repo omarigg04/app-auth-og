@@ -72,37 +72,25 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width > 800;
-    
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Mis Ingresos'),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+      ),
       backgroundColor: Color(0xFFFAFBFC),
-      body: Row(
+      body: Column(
         children: [
-          if (isDesktop) _buildSidebar(),
+          _buildFilterSection(),
           Expanded(
-            child: Column(
-              children: [
-                _buildHeader(),
-                Expanded(
-                  child: Column(
-                    children: [
-                      _buildFilterSection(),
-                      Expanded(
-                        child: _isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : _filteredIncomes.isEmpty
-                                ? _buildEmptyState()
-                                : _buildIncomesList(),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : _filteredIncomes.isEmpty
+                    ? _buildEmptyState()
+                    : _buildIncomesList(),
           ),
         ],
       ),
-      drawer: isDesktop ? null : _buildDrawer(),
       floatingActionButton: _buildFloatingActionButton(),
     );
   }

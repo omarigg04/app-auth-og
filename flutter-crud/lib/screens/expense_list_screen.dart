@@ -73,37 +73,36 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width > 800;
-    
     return Scaffold(
-      backgroundColor: Color(0xFFFAFBFC),
-      body: Row(
-        children: [
-          if (isDesktop) _buildSidebar(),
-          Expanded(
-            child: Column(
-              children: [
-                _buildHeader(),
-                Expanded(
-                  child: Column(
-                    children: [
-                      _buildFilterSection(),
-                      Expanded(
-                        child: _isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : _filteredExpenses.isEmpty
-                                ? _buildEmptyState()
-                                : _buildExpensesList(),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        title: Text('Mis Gastos'),
+        backgroundColor: Colors.orange,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.bar_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ExpenseStatsScreen()),
+              );
+            },
           ),
         ],
       ),
-      drawer: isDesktop ? null : _buildDrawer(),
+      backgroundColor: Color(0xFFFAFBFC),
+      body: Column(
+        children: [
+          _buildFilterSection(),
+          Expanded(
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : _filteredExpenses.isEmpty
+                    ? _buildEmptyState()
+                    : _buildExpensesList(),
+          ),
+        ],
+      ),
       floatingActionButton: _buildFloatingActionButton(),
     );
   }
