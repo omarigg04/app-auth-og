@@ -1,4 +1,0 @@
-{
-    "scripts": {
-    "start:all": "concurrently \"cd backend && npm run start\" \"cd frontend && flutter run\""
-}}
