@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import 'user_list_screen.dart';
+import 'dashboard_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -44,10 +44,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (result['success']) {
-        // Registro exitoso, navegar a la lista de usuarios
+        // Registro exitoso, navegar al dashboard
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const UserListScreen()),
+          MaterialPageRoute(builder: (context) => DashboardScreen()),
         );
         
         ScaffoldMessenger.of(context).showSnackBar(
