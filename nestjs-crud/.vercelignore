@@ -1,0 +1,13 @@
+node_modules
+.env.local*
+.env.aws
+*.log
+coverage
+test
+.git
+.vscode
+README.md
+mydocumentation
+.ebextensions
+.platform
+.ebignore
