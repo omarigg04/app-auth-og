@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './user/user.model';
 import { AuthUser } from './auth/auth-user.model';
@@ -8,7 +8,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ExpenseModule } from './expense/expense.module';
-import { IncomeModule } from './income/income.module'; 
+import { IncomeModule } from './income/income.module';
+import { TestModule } from './test/test.module';
+import { CorsMiddleware } from './cors.middleware'; 
 
 @Module({
   imports: [
@@ -33,6 +35,13 @@ import { IncomeModule } from './income/income.module';
     AuthModule,
     ExpenseModule,
     IncomeModule,
+    TestModule,
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CorsMiddleware)
+      .forRoutes('*');
+  }
+}

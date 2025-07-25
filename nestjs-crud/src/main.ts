@@ -6,12 +6,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors({
-    origin: true, // Permite cualquier origen
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-    credentials: true,
-  });
+  // CORS está manejado por el middleware personalizado
 
   await app.listen(process.env.PORT ?? 3000);
 
