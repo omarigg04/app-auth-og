@@ -22,11 +22,15 @@ async function bootstrap() {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Configurar headers CORS manualmente para asegurar compatibilidad
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Obtener el origin del request
+  const origin = req.headers.origin || req.headers.referer || '*';
+  
+  // Configurar headers CORS manualmente
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 horas
 
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
