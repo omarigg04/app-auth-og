@@ -7,8 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: '*', // o restringido a IP de tu cel si prefieres
+    origin: ['http://localhost:62798', 'http://localhost:3000', 'http://127.0.0.1:62798', '*'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: true,
   });
 
   await app.listen(process.env.PORT ?? 3000);
