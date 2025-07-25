@@ -1,7 +1,12 @@
 import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { AuthUser } from '../auth/auth-user.model';
 
-@Table({ tableName: 'incomes', timestamps: true })
+@Table({ 
+    tableName: 'incomes', 
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+})
 export class Income extends Model<Income> {
     @PrimaryKey
     @AutoIncrement
