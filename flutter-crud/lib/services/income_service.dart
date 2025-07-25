@@ -4,7 +4,7 @@ import '../models/income.dart';
 import 'auth_service.dart';
 
 class IncomeService {
-  final String baseUrl = 'http://localhost:3000/incomes';
+  final String baseUrl = 'https://expenses-tracker-snowy-three.vercel.app/incomes';
   final AuthService _authService = AuthService();
 
   // Crear nuevo ingreso

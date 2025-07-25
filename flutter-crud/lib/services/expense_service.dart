@@ -4,7 +4,7 @@ import '../models/expense.dart';
 import 'auth_service.dart';
 
 class ExpenseService {
-  final String baseUrl = 'http://localhost:3000/expenses';
+  final String baseUrl = 'https://expenses-tracker-snowy-three.vercel.app/expenses';
   final AuthService _authService = AuthService();
 
   // Crear nuevo gasto
