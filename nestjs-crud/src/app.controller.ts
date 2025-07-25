@@ -3,8 +3,12 @@ import { Controller, Get, Post, Body } from '@nestjs/common';
 @Controller()
 export class AppController {
   @Get()
-  getHello(): string {
-    return 'API funcionando';
+  getHello(): any {
+    return {
+      message: 'API funcionando',
+      timestamp: new Date().toISOString(),
+      cors: 'enabled'
+    };
   }
 
   @Get('health')
@@ -17,12 +21,22 @@ export class AppController {
     };
   }
 
-  @Post('test-cors')
-  testCors(@Body() body: any): any {
+  @Get('test/cors')
+  testCorsGet(): any {
+    return {
+      message: 'GET CORS está funcionando correctamente!',
+      timestamp: new Date().toISOString(),
+      status: 'success'
+    };
+  }
+
+  @Post('test/cors')
+  testCorsPost(@Body() body: any): any {
     return { 
-      message: 'CORS funcionando correctamente',
+      message: 'POST CORS está funcionando correctamente!',
       receivedData: body,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      status: 'success'
     };
   }
 }

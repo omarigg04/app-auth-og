@@ -9,7 +9,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ExpenseModule } from './expense/expense.module';
 import { IncomeModule } from './income/income.module';
-import { TestModule } from './test/test.module';
 import { CorsMiddleware } from './cors.middleware'; 
 
 @Module({
@@ -35,7 +34,6 @@ import { CorsMiddleware } from './cors.middleware';
     AuthModule,
     ExpenseModule,
     IncomeModule,
-    TestModule,
   ],
 })
 export class AppModule implements NestModule {

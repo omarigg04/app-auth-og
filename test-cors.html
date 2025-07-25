@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test CORS</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test CORS - Expenses Tracker API</h1>
+    
+    <button onclick="testGet()">🔍 Test GET</button>
+    <button onclick="testPost()">📤 Test POST</button>
+    <button onclick="testLogin()">🔐 Test Login</button>
+    <button onclick="clearResults()">🧹 Limpiar</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = 'https://expenses-tracker-snowy-three.vercel.app';
+        const resultsDiv = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.innerHTML = `<pre>${new Date().toLocaleTimeString()} - ${message}</pre>`;
+            resultsDiv.appendChild(div);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearResults() {
+            resultsDiv.innerHTML = '';
+        }
+
+        async function testGet() {
+            log('🧪 Probando GET /test/cors...');
+            try {
+                const response = await fetch(`${API_BASE}/test/cors`);
+                log(`📊 Status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const data = await response.json();
+                log(`✅ GET Response: ${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log(`❌ GET Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPost() {
+            log('🧪 Probando POST /test/cors...');
+            try {
+                const response = await fetch(`${API_BASE}/test/cors`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        test: 'data from test page',
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                log(`📊 Status: ${response.status}`, response.ok ? 'success' : 'error');
+                const data = await response.json();
+                log(`✅ POST Response: ${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log(`❌ POST Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            log('🧪 Probando POST /auth/login...');
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        userName: 'omarigg',
+                        password: 'tu-password-aqui'  // Cambia por tu password real
+                    })
+                });
+                
+                log(`📊 Status: ${response.status}`, response.ok ? 'success' : 'error');
+                const data = await response.json();
+                log(`🔐 Login Response: ${JSON.stringify(data, null, 2)}`, response.ok ? 'success' : 'error');
+            } catch (error) {
+                log(`❌ Login Error: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
