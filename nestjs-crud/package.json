@@ -9,6 +9,7 @@
     "start:local": "cross-env ENV=.env.local nest start",
     "start:aws": "cross-env ENV=.env.aws nest start",
     "build": "nest build",
+    "vercel-build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
