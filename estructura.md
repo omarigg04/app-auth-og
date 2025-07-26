@@ -1,6 +1,6 @@
 Análisis de tus repositorios
 
-  flutter-crud (Frontend)
+  flutter-crud (Frontend).
 
   Propósito: Aplicación móvil Flutter para gestión de usuarios con operaciones CRUD completas.
 
