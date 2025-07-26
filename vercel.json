@@ -1,0 +1,17 @@
+{
+  "builds": [
+    {
+      "src": "flutter-crud/pubspec.yaml",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "flutter-crud/build/web"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
