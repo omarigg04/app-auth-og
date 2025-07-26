@@ -15,7 +15,7 @@ import { IncomeModule } from './income/income.module';
     ConfigModule.forRoot({ 
       isGlobal: true,
       // Solo carga archivos .env en desarrollo o si no está en Vercel
-      envFilePath: ['.env.local', '.env.aws'],
+      envFilePath: ['.env.aws', '.env.local'],
     }),
     SequelizeModule.forRoot({
       dialect: 'mysql',
